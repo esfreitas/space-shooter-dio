@@ -28,7 +28,7 @@ function moveUp(){
         return;
     }else{
         let position = parseInt(topPosition);
-        position -=50;
+        position -=25;
         yourShip.style.top = `${position}px`;
     }
 }
@@ -42,7 +42,7 @@ function moveDown(){
         return;
     }else{
         let position = parseInt(topPosition);
-        position +=50;
+        position +=25;
         yourShip.style.top = `${position}px`;
     }
 }
@@ -75,6 +75,8 @@ function moveLaser(laser){
                 alien.src ='/img/explosion.png';
                 alien.classList.remove('alien');
                 alien.classList.add('dead-alien');
+                laser.remove();
+                point +=10;
             }              
         })
 
@@ -127,7 +129,7 @@ function checkLaserCollision(laser, alien){
 
     let alienTop = parseInt(alien.style.top);
     let alienLeft = parseInt(alien.style.left);
-    let alienBottom = alienTop - 20;
+    let alienBottom = alienTop - 68;
 
     if(laserLeft!=340 && laserLeft + 40 >=alienLeft){
         if(laserTop <= alienTop && laserTop >= alienBottom){
