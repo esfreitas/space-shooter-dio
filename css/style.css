@@ -17,6 +17,13 @@ body {
     width: 600px;
 }
 
+.conteiner {
+    background-color: black;
+    background-image: url(/img/space.png);
+    height: 600px;
+    width: 600px;
+}
+
 .game-instructions {
     position: relative;
     color: white;
@@ -50,6 +57,18 @@ body {
     height: 60px;
     width: 70px;
     position: relative;
+}
+
+.score {
+    height: 60px;
+    width: 100px;
+    position: absolute;
+}
+
+.lifes {
+    height: 60px;
+    width: 70px;
+    position: absolute;
 }
 
 .alien-transition {

@@ -1,9 +1,31 @@
+
+const conteiner = document.querySelector('.conteiner');
+let points = 0;
+let lifes = 3;
+let level = 1;
+let velocidade = 30;
+createScore();
+createLifes();
 const yourShip = document.querySelector('.player-shooter');
 const playArea = document.querySelector('#main-play-area');
 const aliensImg = ['/img/monster-1.png', '/img/monster-2.png', '/img/monster-3.png'];
 const instructionsText = document.querySelector('.game-instructions');
 const startButton = document.querySelector('.start-button');
 let alienInterval;
+
+
+
+
+
+function refreshPoints(){
+    document.querySelector('.score').innerHTML = `Level ${level} Pontos: ${points}`; 
+}
+
+function refreshLifes(){
+    document.querySelector('.lifes').innerHTML = `Vidas: ${lifes}`; 
+}
+
+
 
 
 //Movimentos e disparo
@@ -51,7 +73,7 @@ function moveDown(){
 function fireLaser(){
     let laser = createLaserElement();
     playArea.appendChild(laser);
-    moveLaser(laser);
+    moveLaser(laser, points);
 }
 
 function createLaserElement(){
@@ -65,6 +87,8 @@ function createLaserElement(){
     return newLaser;
 }
 
+
+
 function moveLaser(laser){
     let laserInterval = setInterval(()=>{
         let xPosition = parseInt(laser.style.left);
@@ -76,7 +100,12 @@ function moveLaser(laser){
                 alien.classList.remove('alien');
                 alien.classList.add('dead-alien');
                 laser.remove();
-                point +=10;
+                points = points + 10;
+                refreshPoints();     
+                
+                if(points === level * 50){
+                    levelUp()
+                }         
             }              
         })
 
@@ -111,14 +140,18 @@ function moveAlien(alien){
         if (xPosition <= 50){
             if(Array.from(alien.classList).includes('dead-alien')){
                 alien.remove();
-            }else{
+            }else if(lifes === 0){
                 gameOver();
+            }else{
+                lifes = lifes - 1; 
+                refreshLifes();
+                alien.remove();
             }
         }else{
             alien.style.left = `${xPosition - 4}px`;
         }
 
-    }, 30);
+    }, velocidade);
 }
 
 //Função para colisão
@@ -161,6 +194,31 @@ function playGame(){
     }, 2000);
 }
 
+
+//função level up 
+function levelUp(){
+
+    level ++;
+    velocidade = velocidade - 2;
+
+    window.removeEventListener('keydown', flyShip);
+    clearInterval(alienInterval);
+    let aliens = document.querySelectorAll('.alien');
+    aliens.forEach((alien) => alien.remove());
+    let lasers = document.querySelectorAll('.laser');
+    lasers.forEach((laser) => laser.remove());
+    alert(`Passou para o nível ${level}, pontuação atual ${points}`);
+
+    setTimeout(()=>{
+        yourShip.style.top = '250px';
+        startButton.style.display = 'block';
+        instructionsText.style.display ='block';
+    });
+
+    refreshPoints();
+
+}
+
 //função game over
 
 function gameOver(){
@@ -170,15 +228,42 @@ function gameOver(){
     aliens.forEach((alien) => alien.remove());
     let lasers = document.querySelectorAll('.laser');
     lasers.forEach((laser) => laser.remove());
+    alert(`Game Over, você chegou ao nível ${level}, pontuação ${points}`);
 
     setTimeout(()=>{
-        alert('Game Over!');
         yourShip.style.top = '250px';
         startButton.style.display = 'block';
         instructionsText.style.display ='block';
     });
+
+    points = 0;
+    lifes = 3;
+    level = 1;
+    refreshPoints();
+    refreshLifes();
 }
 
+//Funão para criar o placar de pontos
+function createScore(){
+    let newScore = document.createElement('div');
+    newScore.style.color = 'white';
+    newScore.innerHTML = `Level ${level} Pontos: ${points}`;
+    newScore.classList.add('score');
+    newScore.style.left = '30%';
+    newScore.style.top = '30px';
+    conteiner.appendChild(newScore);
+}
+
+//Funão para criar o placar de vidas
+function createLifes(){
+    let newLifes = document.createElement('div');
+    newLifes.style.color = 'white';
+    newLifes.innerHTML = `${lifes}`;
+    newLifes.classList.add('lifes');
+    newLifes.style.left = '70%';
+    newLifes.style.top = '30px';
+    conteiner.appendChild(newLifes);
+}
 
 
 
